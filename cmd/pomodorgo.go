@@ -2,14 +2,18 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/JoelSaleem/pomodorgo/internal/db"
+	"github.com/JoelSaleem/pomodorgo/internal/tea_model"
 	"github.com/kelseyhightower/envconfig"
 )
 
 type Specification struct {
 	DBPath string `split_words:"true"`
 }
+
+
 
 func main() {
 	var spec Specification
@@ -19,9 +23,11 @@ func main() {
 		panic("DBPath not set")
 	}
 
-	fmt.Println("\n\n x \n\n", spec.DBPath)
-
 	repo := db.NewRepository(spec.DBPath)
+	if _, err := tea_model.NewProgram(repo).Run(); err != nil {
+		fmt.Println("Error running program:", err)
+		os.Exit(1)
+	}
 }
 
 // alt-screen toggle (full screen app)

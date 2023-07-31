@@ -1,12 +1,14 @@
 package db
 
 import (
-	"fmt"
-
 	"github.com/JoelSaleem/pomodorgo/internal/db/models"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
+
+type IRepository interface {
+	// ConnectToDB(dbPath string) (*gorm.DB, error)
+}
 
 type Repository struct {
 	db *gorm.DB
@@ -18,16 +20,8 @@ func NewRepository(dbPath string) *Repository {
 		panic(err)
 	}
 
-	return &Repository{db: db}
-}
-
-func (r *Repository) connectToDB(dbPath string) (*gorm.DB, error) {
-	db, err := gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect database: %w", err)
-	}
-
+	// Todo: maybe don't do in prod
 	db.AutoMigrate(&models.Task{})
 
-	return db, nil
+	return &Repository{db: db}
 }
