@@ -63,10 +63,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case " ":
 			return m, nil
-		case "right", "l", "n", "tab":
+		case "right":
 			m.activeTab = min(m.activeTab+1, len(tabs.Tabs)-1)
 			return m, nil
-		case "left", "h", "p", "shift+tab":
+		case "left":
 			m.activeTab = max(m.activeTab-1, 0)
 			return m, nil
 
