@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/JoelSaleem/pomodorgo/internal/db"
+	"github.com/JoelSaleem/pomodorgo/internal/tabs"
 	"github.com/JoelSaleem/pomodorgo/internal/tea_model"
 	"github.com/kelseyhightower/envconfig"
 )
@@ -22,7 +23,7 @@ func main() {
 	}
 
 	repo := db.NewRepository(spec.DBPath)
-	if _, err := tea_model.NewProgram(repo).Run(); err != nil {
+	if _, err := tea_model.NewProgram(repo, tabs.ConstructTabs()).Run(); err != nil {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
 	}

@@ -1,7 +1,6 @@
 package tea_model
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/JoelSaleem/pomodorgo/internal/db"
@@ -30,31 +29,23 @@ var (
 
 type model struct {
 	repository db.IRepository // TODO: must extend interface
-
-	altscreen bool
 	quitting  bool
-
 	activeTab int
+	tabs 	[]tabs.Tab
 }
 
-func NewProgram(repo *db.Repository) *tea.Program {
+func NewProgram(repo *db.Repository, tabs []tabs.Tab) *tea.Program {
 	return tea.NewProgram(model{
 		repository: repo,
+		tabs: tabs,
 	})
 }
 
 func (m model) Init() tea.Cmd {
-	m.altscreen = false
-	return nil
+	return tea.EnterAltScreen
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	if !m.altscreen {
-		m.altscreen = true
-		fmt.Println("entering alt screen")
-		return m, tea.EnterAltScreen
-	}
-
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -64,12 +55,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case " ":
 			return m, nil
 		case "right":
-			m.activeTab = min(m.activeTab+1, len(tabs.Tabs)-1)
+			m.activeTab = min(m.activeTab+1, len(m.tabs)-1)
 			return m, nil
 		case "left":
 			m.activeTab = max(m.activeTab-1, 0)
 			return m, nil
-
 		}
 	}
 	return m, nil
@@ -77,16 +67,15 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) View() string {
 	doc := strings.Builder{}
-	tea.EnterAltScreen()
 	if m.quitting {
 		return "Bye!\n"
 	}
 
 	var renderedTabs []string
 
-	for i, t := range tabs.Tabs {
+	for i, t := range m.tabs {
 		var style lipgloss.Style
-		isFirst, isLast, isActive := i == 0, i == len(tabs.Tabs)-1, i == m.activeTab
+		isFirst, isLast, isActive := i == 0, i == len(m.tabs)-1, i == m.activeTab
 		if isActive {
 			style = activeTabStyle.Copy()
 		} else {
@@ -109,7 +98,7 @@ func (m model) View() string {
 	doc.WriteString("Pomodorgo\n\n")
 	row := lipgloss.JoinHorizontal(lipgloss.Top, renderedTabs...)
 	doc.WriteString(row)
-	doc.WriteString(windowStyle.Width((lipgloss.Width(row) - windowStyle.GetHorizontalFrameSize())).Render(tabs.Tabs[m.activeTab].RenderContent()))
+	doc.WriteString(windowStyle.Width((lipgloss.Width(row) - windowStyle.GetHorizontalFrameSize())).Render(m.tabs[m.activeTab].RenderContent()))
 	return docStyle.Render(doc.String())
 }
 
