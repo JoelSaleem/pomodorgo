@@ -1,6 +1,8 @@
 package db
 
 import (
+	"fmt"
+
 	"github.com/JoelSaleem/pomodorgo/internal/db/models"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -15,6 +17,7 @@ type Repository struct {
 }
 
 func NewRepository(dbPath string) *Repository {
+	fmt.Println("\n\n connecting to db \n\n", dbPath)
 	db, err := gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
 	if err != nil {
 		panic(err)

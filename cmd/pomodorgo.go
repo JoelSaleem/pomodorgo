@@ -13,8 +13,6 @@ type Specification struct {
 	DBPath string `split_words:"true"`
 }
 
-
-
 func main() {
 	var spec Specification
 	envconfig.MustProcess("pomodorgo", &spec)
