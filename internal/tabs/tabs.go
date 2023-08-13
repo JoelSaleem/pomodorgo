@@ -1,17 +1,17 @@
 package tabs
 
 var Tabs = []Tab{
-	{Name: "Tasks", Content: "My Tasks"},
-	{Name: "Timers", Content: "Timers go here"},
-	{Name: "Stats", Content: "Stats go here"},
-	{Name: "Settings", Content: "Settings go here"},
+	{"Tasks", "My Tasks"},
+	{"Timers", "Timers go here"},
+	{"Stats", "Stats go here"},
+	{"Settings", "Settings go here"},
 }
 
 type Tab struct {
 	Name    string
-	Content string
+	content string
 }
 
 func (t Tab) RenderContent() string {
-	return t.Content
+	return t.content
 }
