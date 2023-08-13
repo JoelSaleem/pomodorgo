@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/JoelSaleem/pomodorgo/internal/db"
+	"github.com/JoelSaleem/pomodorgo/internal/tabs"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
@@ -27,23 +28,12 @@ var (
 	windowStyle       = lipgloss.NewStyle().BorderForeground(highlightColor).Padding(2, 0).Align(lipgloss.Center).Border(lipgloss.NormalBorder()).UnsetBorderTop()
 )
 
-var tabs = []string{
-	"Tasks",
-	"Timers",
-	"Stats",
-	"Settings", // TODO: add settings
-}
-type Tab struct {
-	Name string
-}
-
 type model struct {
 	repository db.IRepository // TODO: must extend interface
 
 	altscreen bool
 	quitting  bool
 
-	// tabs      []Tab{}
 	activeTab int
 }
 
@@ -74,7 +64,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case " ":
 			return m, nil
 		case "right", "l", "n", "tab":
-			m.activeTab = min(m.activeTab+1, len(tabs)-1)
+			m.activeTab = min(m.activeTab+1, len(tabs.Tabs)-1)
 			return m, nil
 		case "left", "h", "p", "shift+tab":
 			m.activeTab = max(m.activeTab-1, 0)
@@ -92,13 +82,11 @@ func (m model) View() string {
 		return "Bye!\n"
 	}
 
-	
-
 	var renderedTabs []string
 
-	for i, t := range tabs {
+	for i, t := range tabs.Tabs {
 		var style lipgloss.Style
-		isFirst, isLast, isActive := i == 0, i == len(tabs)-1, i == m.activeTab
+		isFirst, isLast, isActive := i == 0, i == len(tabs.Tabs)-1, i == m.activeTab
 		if isActive {
 			style = activeTabStyle.Copy()
 		} else {
@@ -115,13 +103,13 @@ func (m model) View() string {
 			border.BottomRight = "┤"
 		}
 		style = style.Border(border)
-		renderedTabs = append(renderedTabs, style.Render(t))
+		renderedTabs = append(renderedTabs, style.Render(t.Name))
 	}
 
 	doc.WriteString("Pomodorgo\n\n")
 	row := lipgloss.JoinHorizontal(lipgloss.Top, renderedTabs...)
 	doc.WriteString(row)
-	doc.WriteString(windowStyle.Width((lipgloss.Width(row) - windowStyle.GetHorizontalFrameSize())).Render("your content here"))
+	doc.WriteString(windowStyle.Width((lipgloss.Width(row) - windowStyle.GetHorizontalFrameSize())).Render(tabs.Tabs[m.activeTab].RenderContent()))
 	return docStyle.Render(doc.String())
 }
 
