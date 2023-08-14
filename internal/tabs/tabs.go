@@ -1,14 +1,15 @@
 package tabs
 
 import (
-	"github.com/JoelSaleem/pomodorgo/internal/stats"
-	"github.com/JoelSaleem/pomodorgo/internal/tasks"
-	"github.com/JoelSaleem/pomodorgo/internal/timers"
+	"github.com/JoelSaleem/pomodorgo/internal/content"
+	"github.com/JoelSaleem/pomodorgo/internal/content/stats"
+	"github.com/JoelSaleem/pomodorgo/internal/content/tasks"
+	"github.com/JoelSaleem/pomodorgo/internal/content/timers"
 )
 
 type Tab struct {
 	Name    string
-	content IContent
+	content content.Content
 }
 
 func (t Tab) RenderContent() string {
@@ -22,8 +23,4 @@ func ConstructTabs() []Tab {
 		{Name: "Stats", content: stats.NewStats()},
 		{Name: "Settings", content: timers.NewTimers()},
 	}
-}
-
-type IContent interface {
-	View() string
 }
