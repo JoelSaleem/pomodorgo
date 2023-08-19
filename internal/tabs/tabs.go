@@ -17,8 +17,10 @@ func (t Tab) RenderContent() string {
 	return t.content.View()
 }
 
-func (t Tab) Update(msg tea.Msg) tea.Cmd {
-	return t.content.Update(msg)
+func (t Tab) Update(msg tea.Msg) (Tab, tea.Cmd) {
+	content, cmd := t.content.Update(msg)
+	t.content = content
+	return t, cmd
 }
 
 func ConstructTabs() []Tab {

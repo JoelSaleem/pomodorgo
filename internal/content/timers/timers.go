@@ -1,6 +1,9 @@
 package timers
 
-import tea "github.com/charmbracelet/bubbletea"
+import (
+	"github.com/JoelSaleem/pomodorgo/internal/content"
+	tea "github.com/charmbracelet/bubbletea"
+)
 
 type Timers struct{}
 
@@ -12,6 +15,6 @@ func (t Timers) View() string {
 	return "Your timers"
 }
 
-func (t Timers) Update(msg tea.Msg) tea.Cmd {
-	return nil
+func (t Timers) Update(msg tea.Msg) (content.Content, tea.Cmd) {
+	return nil, nil
 }

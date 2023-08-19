@@ -52,16 +52,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "ctrl+c", "esc":
 			m.quitting = true
 			return m, tea.Quit
-		case " ":
-			return m, nil
 		case "right":
 			m.activeTab = min(m.activeTab+1, len(m.tabs)-1)
 			return m, nil
 		case "left":
 			m.activeTab = max(m.activeTab-1, 0)
 			return m, nil
+		// case " ":
+		// 	return m, nil
 		default:
-			cmd := m.tabs[m.activeTab].Update(msg)
+			tab, cmd := m.tabs[m.activeTab].Update(msg)
+			m.tabs[m.activeTab] = tab
 			return m, cmd
 		} 
 	}
