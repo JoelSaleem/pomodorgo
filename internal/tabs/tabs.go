@@ -5,6 +5,7 @@ import (
 	"github.com/JoelSaleem/pomodorgo/internal/content/stats"
 	"github.com/JoelSaleem/pomodorgo/internal/content/tasks"
 	"github.com/JoelSaleem/pomodorgo/internal/content/timers"
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 type Tab struct {
@@ -14,6 +15,10 @@ type Tab struct {
 
 func (t Tab) RenderContent() string {
 	return t.content.View()
+}
+
+func (t Tab) Update(msg tea.Msg) tea.Cmd {
+	return t.content.Update(msg)
 }
 
 func ConstructTabs() []Tab {

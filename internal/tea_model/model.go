@@ -60,7 +60,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "left":
 			m.activeTab = max(m.activeTab-1, 0)
 			return m, nil
-		}
+		default:
+			cmd := m.tabs[m.activeTab].Update(msg)
+			return m, cmd
+		} 
 	}
 	return m, nil
 }
