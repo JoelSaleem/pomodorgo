@@ -17,6 +17,14 @@ func (a AddTasks) View() string {
 func (a AddTasks) Update(msg tea.Msg) (content.Content, tea.Cmd) {
 	var cmd tea.Cmd
 
+	
+	if msg, ok := msg.(tea.KeyMsg); ok {
+		if msg.Type == tea.KeyEnter {
+			// todo: add task
+			return a, cmd
+		}
+	}
+
 	ti, cmd := a.textInput.Update(msg)
 	a.textInput = &ti
 
