@@ -16,7 +16,10 @@ func (a AddTasks) View() string {
 
 func (a AddTasks) Update(msg tea.Msg) (content.Content, tea.Cmd) {
 	var cmd tea.Cmd
-	// a.textInput, cmd = a.textInput.Update(msg)
+
+	ti, cmd := a.textInput.Update(msg)
+	a.textInput = &ti
+
 	return a, cmd
 }
 
