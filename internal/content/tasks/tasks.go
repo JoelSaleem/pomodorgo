@@ -63,12 +63,13 @@ func (l listItem) Description() string {
 	return l.title
 }
 
-func NewTasks(height, width int) *Tasks {
+func NewTasks(width, height int) *Tasks {
 	items := make([]list.Item, 0)
 
 	items = append(items, listItem{title: "Task 1"}, listItem{title: "Task 2"}, listItem{title: "Task 3"})
 	d := list.NewDefaultDelegate()
-	l := list.New(items, d, 10, 20)
+	// Todo: need to read this in from window size
+	l := list.New(items, d, width, height)
 	l.Title = "My Tasks"
 	l.Styles.Title = titleStyle
 
