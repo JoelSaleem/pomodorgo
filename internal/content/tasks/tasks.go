@@ -40,6 +40,7 @@ type listKeyMap struct {
 type Tasks struct {
 	list          list.Model
 	keys          *listKeyMap
+	text          string
 	height, width int
 }
 
@@ -68,7 +69,6 @@ func NewTasks(width, height int) *Tasks {
 
 	items = append(items, listItem{title: "Task 1"}, listItem{title: "Task 2"}, listItem{title: "Task 3"})
 	d := list.NewDefaultDelegate()
-	// Todo: need to read this in from window size
 	l := list.New(items, d, width, height)
 	l.Title = "My Tasks"
 	l.Styles.Title = titleStyle
