@@ -23,9 +23,9 @@ func (t Tab) Update(msg tea.Msg) (Tab, tea.Cmd) {
 	return t, cmd
 }
 
-func ConstructTabs() []Tab {
+func ConstructTabs(width, height int) []Tab {
 	return []Tab{
-		{Name: "Tasks", content: tasks.NewTasks()},
+		{Name: "Tasks", content: tasks.NewTasks(width, height)},
 		{Name: "Timers", content: timers.NewTimers()},
 		{Name: "Stats", content: stats.NewStats()},
 		{Name: "Settings", content: timers.NewTimers()},

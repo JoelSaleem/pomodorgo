@@ -4,40 +4,23 @@ import (
 	"strings"
 
 	"github.com/JoelSaleem/pomodorgo/internal/db"
+	"github.com/JoelSaleem/pomodorgo/internal/styles"
 	"github.com/JoelSaleem/pomodorgo/internal/tabs"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
 
-func tabBorderWithBottom(left, middle, right string) lipgloss.Border {
-	border := lipgloss.RoundedBorder()
-	border.BottomLeft = left
-	border.Bottom = middle
-	border.BottomRight = right
-	return border
-}
-
-var (
-	inactiveTabBorder = tabBorderWithBottom("┴", "─", "┴")
-	activeTabBorder   = tabBorderWithBottom("┘", " ", "└")
-	docStyle          = lipgloss.NewStyle().Padding(1, 2, 1, 2)
-	highlightColor    = lipgloss.AdaptiveColor{Light: "#874BFD", Dark: "#7D56F4"}
-	inactiveTabStyle  = lipgloss.NewStyle().Border(inactiveTabBorder, true).BorderForeground(highlightColor).Padding(0, 1)
-	activeTabStyle    = inactiveTabStyle.Copy().Border(activeTabBorder, true)
-	windowStyle       = lipgloss.NewStyle().BorderForeground(highlightColor).Padding(2, 0).Align(lipgloss.Center).Border(lipgloss.NormalBorder()).UnsetBorderTop()
-)
-
 type model struct {
 	repository db.IRepository // TODO: must extend interface
-	quitting  bool
-	activeTab int
-	tabs 	[]tabs.Tab
+	quitting   bool
+	activeTab  int
+	tabs       []tabs.Tab
 }
 
 func NewProgram(repo *db.Repository, tabs []tabs.Tab) *tea.Program {
 	return tea.NewProgram(model{
 		repository: repo,
-		tabs: tabs,
+		tabs:       tabs,
 	})
 }
 
@@ -64,7 +47,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			tab, cmd := m.tabs[m.activeTab].Update(msg)
 			m.tabs[m.activeTab] = tab
 			return m, cmd
-		} 
+		}
 	}
 	return m, nil
 }
@@ -81,9 +64,9 @@ func (m model) View() string {
 		var style lipgloss.Style
 		isFirst, isLast, isActive := i == 0, i == len(m.tabs)-1, i == m.activeTab
 		if isActive {
-			style = activeTabStyle.Copy()
+			style = styles.ActiveTabStyle.Copy()
 		} else {
-			style = inactiveTabStyle.Copy()
+			style = styles.InactiveTabStyle.Copy()
 		}
 		border, _, _, _, _ := style.GetBorder()
 		if isFirst && isActive {
@@ -99,11 +82,19 @@ func (m model) View() string {
 		renderedTabs = append(renderedTabs, style.Render(t.Name))
 	}
 
-	doc.WriteString("Pomodorgo\n\n")
 	row := lipgloss.JoinHorizontal(lipgloss.Top, renderedTabs...)
 	doc.WriteString(row)
-	doc.WriteString(windowStyle.Width((lipgloss.Width(row) - windowStyle.GetHorizontalFrameSize())).Render(m.tabs[m.activeTab].RenderContent()))
-	return docStyle.Render(doc.String())
+	doc.WriteString(
+		styles.WindowStyle.Height(
+			lipgloss.Height(row) - styles.WindowStyle.GetVerticalFrameSize(),
+		).Width(
+			lipgloss.Width(row) - styles.WindowStyle.GetHorizontalFrameSize(),
+		).Render(
+			m.tabs[m.activeTab].RenderContent(),
+		),
+	)
+	doc.WriteString("\n")
+	return styles.DocStyle.Render(doc.String())
 }
 
 func max(a, b int) int {

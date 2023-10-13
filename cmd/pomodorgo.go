@@ -23,7 +23,7 @@ func main() {
 	}
 
 	repo := db.NewRepository(spec.DBPath)
-	if _, err := tea_model.NewProgram(repo, tabs.ConstructTabs()).Run(); err != nil {
+	if _, err := tea_model.NewProgram(repo, tabs.ConstructTabs(100, 200)).Run(); err != nil {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
 	}

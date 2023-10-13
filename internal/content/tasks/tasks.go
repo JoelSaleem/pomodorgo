@@ -38,29 +38,45 @@ type listKeyMap struct {
 }
 
 type Tasks struct {
-	list list.Model
-	keys *listKeyMap
+	list          list.Model
+	keys          *listKeyMap
+	height, width int
+}
+
+func (t Tasks) SetDimensions(width, height int) Tasks {
+	t.height = height
+	t.width = width
+	return t
 }
 
 type listItem struct {
-	Title string
+	title string
 }
 
 func (l listItem) FilterValue() string {
-	return l.Title
+	return l.title
+}
+func (l listItem) Title() string {
+	return l.title
+}
+func (l listItem) Description() string {
+	return l.title
 }
 
-func NewTasks() *Tasks {
+func NewTasks(height, width int) *Tasks {
 	items := make([]list.Item, 0)
 
-	items = append(items, listItem{Title: "Task 1"}, listItem{Title: "Task 2"}, listItem{Title: "Task 3"})
-	l := list.New(items, list.NewDefaultDelegate(), 0, 0)
+	items = append(items, listItem{title: "Task 1"}, listItem{title: "Task 2"}, listItem{title: "Task 3"})
+	d := list.NewDefaultDelegate()
+	l := list.New(items, d, 0, 0)
 	l.Title = "My Tasks"
 	l.Styles.Title = titleStyle
 
-	return &Tasks{
+	t := Tasks{
 		list: l,
-	}
+	}.SetDimensions(width, height)
+
+	return &t
 }
 
 func (t Tasks) View() string {
