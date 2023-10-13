@@ -68,7 +68,7 @@ func NewTasks(height, width int) *Tasks {
 
 	items = append(items, listItem{title: "Task 1"}, listItem{title: "Task 2"}, listItem{title: "Task 3"})
 	d := list.NewDefaultDelegate()
-	l := list.New(items, d, 0, 0)
+	l := list.New(items, d, 10, 20)
 	l.Title = "My Tasks"
 	l.Styles.Title = titleStyle
 
