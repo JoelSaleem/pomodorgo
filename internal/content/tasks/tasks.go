@@ -4,7 +4,6 @@ import (
 	"github.com/JoelSaleem/pomodorgo/internal/content"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
-	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
@@ -43,7 +42,6 @@ type Tasks struct {
 	keys          *listKeyMap
 	text          string
 	height, width int
-	textInput     *textinput.Model
 }
 
 func (t Tasks) SetDimensions(width, height int) Tasks {
@@ -75,14 +73,8 @@ func NewTasks(width, height int) *Tasks {
 	l.Title = "My Tasks"
 	l.Styles.Title = titleStyle
 
-	ti := textinput.New()
-	ti.Placeholder = "Add a task"
-	ti.Focus()
-	ti.Width = width - 2
-
 	t := Tasks{
-		list:      l,
-		textInput: &ti,
+		list: l,
 	}.SetDimensions(width, height)
 
 	return &t
@@ -90,8 +82,6 @@ func NewTasks(width, height int) *Tasks {
 
 func (t Tasks) View() string {
 	return appStyle.Render(
-		t.textInput.View(),
-		"\n\n",
 		t.list.View(),
 	)
 }

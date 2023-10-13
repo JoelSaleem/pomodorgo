@@ -2,6 +2,7 @@ package tabs
 
 import (
 	"github.com/JoelSaleem/pomodorgo/internal/content"
+	"github.com/JoelSaleem/pomodorgo/internal/content/add_tasks"
 	"github.com/JoelSaleem/pomodorgo/internal/content/stats"
 	"github.com/JoelSaleem/pomodorgo/internal/content/tasks"
 	"github.com/JoelSaleem/pomodorgo/internal/content/timers"
@@ -25,7 +26,8 @@ func (t Tab) Update(msg tea.Msg) (Tab, tea.Cmd) {
 
 func ConstructTabs(width, height int) []Tab {
 	return []Tab{
-		{Name: "Tasks", content: tasks.NewTasks(width, height)},
+		{Name: "Add a task", content: add_tasks.NewAddTasks(width)},
+		{Name: "My tasks", content: tasks.NewTasks(width, height)},
 		{Name: "Timers", content: timers.NewTimers()},
 		{Name: "Stats", content: stats.NewStats()},
 		{Name: "Settings", content: timers.NewTimers()},
